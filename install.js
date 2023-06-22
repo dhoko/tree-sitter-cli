@@ -87,24 +87,26 @@ function get(url, callback) {
   let request = https
   let requestConfig = requestUrl
   const proxyEnv = process.env['HTTPS_PROXY'] || process.env['https_proxy']
+  const agent =  new proxy.ProxyAgent(proxyEnv)
 
-  if (proxyEnv) {
-    const proxyUrl = new URL(proxyEnv)
-    request = proxyUrl.protocol === 'https:' ? https : http
-    requestConfig = {
-      hostname: proxyUrl.hostname,
-      port: proxyUrl.port,
-      path: requestUrl.toString(),
-      agent: new proxy.ProxyAgent(process.env.https_proxy),
-      headers: {
-        Host: requestUrl.hostname
-      }
-    }
-  }
 
-  console.log("request", requestConfig)
+  // if (proxyEnv) {
+  //   const proxyUrl = new URL(proxyEnv)
+  //   request = proxyUrl.protocol === 'https:' ? https : http
+  //   requestConfig = {
+  //     hostname: proxyUrl.hostname,
+  //     port: proxyUrl.port,
+  //     path: requestUrl.toString(),
+  //     agent: new proxy.ProxyAgent(process.env.https_proxy),
+  //     headers: {
+  //       Host: requestUrl.hostname
+  //     }
+  //   }
+  // }
 
-  request.get(requestConfig, response => {
+  // console.log("request", requestConfig)
+
+  request.get(url, { agent }, response => {
     if (response.statusCode === 301 || response.statusCode === 302) {
       get(response.headers.location, callback);
     } else {
