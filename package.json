@@ -20,5 +20,8 @@
   },
   "bin": {
     "tree-sitter": "cli.js"
+  },
+  "dependencies": {
+    "proxy-agent": "^6.2.1"
   }
 }

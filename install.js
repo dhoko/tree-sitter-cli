@@ -5,6 +5,7 @@ const zlib = require('zlib');
 const http = require('http');
 const https = require('https');
 const packageJSON = require('./package.json');
+const proxy = require('proxy-agent')
 
 // Look to a results table in https://github.com/tree-sitter/tree-sitter/issues/2196
 const matrix = {
@@ -94,11 +95,14 @@ function get(url, callback) {
       hostname: proxyUrl.hostname,
       port: proxyUrl.port,
       path: requestUrl.toString(),
+      agent: new proxy.ProxyAgent(process.env.https_proxy),
       headers: {
         Host: requestUrl.hostname
       }
     }
   }
+
+  console.log("request", requestConfig)
 
   request.get(requestConfig, response => {
     if (response.statusCode === 301 || response.statusCode === 302) {
